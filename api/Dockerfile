@@ -5,5 +5,6 @@ WORKDIR /app
 
 RUN npm install nodemon -g
 
-EXPOSE 5000
+# port to change if port is taken 
+EXPOSE 5003
 CMD echo 1; npm install; echo 2; npx nodemon app.js

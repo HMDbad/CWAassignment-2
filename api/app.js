@@ -29,8 +29,9 @@ require("./routes/contacts.routes")(app);
 require("./routes/phones.routes")(app);
 require("./routes/stats.routes")(app);
 
+// port to change if port is taken
 // set port, listen for requests
-const PORT = 5000;
+const PORT = 5003;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
