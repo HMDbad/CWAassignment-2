@@ -1,6 +1,7 @@
 version: "3.8"
 
 #Update the connection among these microservices before starting the container.
+# 
 
 services:
   nginx:
@@ -14,8 +15,6 @@ services:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - 3000:3000
     volumes:
       - ./frontend:/app
   
@@ -24,15 +23,12 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-    # port to change if port is taken
       - 5003:5003
     volumes:
       - ./api:/app
 
   db:
     image: postgres:15.3-alpine3.18
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

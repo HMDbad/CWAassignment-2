@@ -4,7 +4,21 @@ const Phones = db.phones;
 const Op = db.Sequelize.Op;
 
 // Create contact
+// when i press the button(id="CreateContact"), it should create a contact
+// with the name that is in the input field(id="inputfield")
 exports.create = (req, res) => {
+    const contact = {
+        name: req.body.name,
+    };
+
+Contacts.create(contact)
+.then((data) =>res.send(data))
+.catch((err) => {
+    res.status(500).send({
+        message:
+        err.message || "Some error occurred while creating the Contact.",
+    });
+});
     
 };
 
