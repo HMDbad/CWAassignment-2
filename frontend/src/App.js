@@ -46,7 +46,7 @@ function App() {
           value={newContactName}
           onChange={(e) => setNewContactName(e.target.value)}
         />
-        <button id="createContact" onClick={cre}>Create Contact</button>
+        <button id="createContact" >Create Contact</button>
         <p>Click a contact to view associated phone numbers</p>
       </div>
     </div>

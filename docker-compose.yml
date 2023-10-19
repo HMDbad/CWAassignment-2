@@ -17,12 +17,15 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/app
+    depends_on:
+      - api
   
   api:
     build: 
       context: ./api
       dockerfile: Dockerfile
     ports:
+    # host:container
       - 5003:5003
     volumes:
       - ./api:/app
