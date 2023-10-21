@@ -131,3 +131,32 @@ body {
     margin: 10px; /* Adjust the value as per your preference */
 }
 
+.PhoneNumbers {
+    padding: 10px;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    /* make everything centered */
+    text-align: center;
+    /* make the table fixed width */
+    width:fit-content;
+    margin: 0 auto;
+}
+
+.PhoneNumbers table, td, th{
+    border-collapse: collapse;
+    border: 1px solid #000000;
+    text-align: center;
+    padding: 10px 15px; /* Adjust padding as needed */
+    /* width: 50%;  */
+}
+
+.PhoneNumbers th {
+    background-color: #a1a1a1; /* Background color for header cells */
+    font-weight: bold;
+}
+
+.PhoneNumbers td, .PhoneNumbers th {
+    width: 70hv; /* Adjust width as needed */
+}
+

@@ -58,7 +58,7 @@ function App() {
   const DeleteContact = async (contactId) => {
     console.log("deleting contact");
     try {
-      await fetchData(`http://localhost:80/api/contacts/${contactId}`,{
+      await fetchData(`http://localhost:80/api/contacts/${contactId}`, {
         method: "DELETE",
       });
       fetchContacts();
@@ -93,10 +93,12 @@ function App() {
         <hr />
         <div className="ContactsList">
           {contacts.map((contact) => (
-            <ContactCard key={contact.id} 
-            contact={contact} 
-            DeleteContact={DeleteContact}
-            fetchData={fetchData}/>
+            <ContactCard
+              key={contact.id}
+              contact={contact}
+              DeleteContact={DeleteContact}
+              fetchData={fetchData}
+            />
           ))}
         </div>
       </div>
@@ -108,27 +110,145 @@ function App() {
 
 // ContactCard component
 function ContactCard({ contact, DeleteContact, fetchData }) {
-  // const [phoneNumbers, setPhoneNumbers] = useState([]);
-  // const [newPhoneName, setNewPhoneName] = useState("");
-  // const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [phoneNumbers, setPhoneNumbers] = useState([]);
+  const [newPhoneName, setNewPhoneName] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
+  const [Showing, setShowing] = useState(false);
+
+  // fetch Phones
+  const fetchPhoneNumbers = async () => {
+    console.log("fetching phone numbers from database");
+    try {
+      const data = await fetchData(
+        `http://localhost:80/api/contacts/${contact.id}/phones`
+      );
+      setPhoneNumbers(data);
+    } catch (error) {
+      console.log("Error while fetching phone numbers data: ", error);
+    }
+  };
+
+  // add phone number
+  const addPhoneNumber = async (name, number) => {
+    console.log("adding phone number");
+    try {
+      await fetchData(`http://localhost:80/api/contacts/${contact.id}/phones`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newPhoneName,
+          number: newPhoneNumber,
+          contactId: contact.id,
+        }),
+      });
+      // After creating a phone number, fetch the updated phone numbers list.
+      fetchPhoneNumbers();
+      // refresh the input fields
+      setNewPhoneName("");
+      setNewPhoneNumber("");
+    } catch (error) {
+      console.log("Error while adding phone number: ", error);
+    }
+  };
+
+  // delete phone number
+  const DeletePhoneNumber = async (phoneId) => {
+    console.log("deleting phone number");
+    try {
+      await fetchData(
+        `http://localhost:80/api/contacts/${contact.id}/phones/${phoneId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      fetchPhoneNumbers();
+    } catch (error) {
+      console.log("Error while deleting phone number: ", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch phone numbers when the component mounts or when the contact changes.
+    fetchPhoneNumbers();
+  }, [contact]);
+
+  // contact card JSX here
   return (
     <div className="Card">
       <div className="Info">
-        <div className="name">
+        <div className="name" onClick={() => setShowing(!Showing)}>
           <h1>{contact.name}</h1>
-          <p>   contactId : {contact.id} </p>
-          
+          <p> contactId : {contact.id} </p>
+
           <button onClick={() => DeleteContact(contact.id)}>Delete</button>
-
-          {/* name input field and ph input field and add button */}
-          {/* <input type="text" placeholder=" Name " />
-          <input type="text" placeholder=" Phone Number " />
-          <button>Add</button> */}
         </div>
-        <hr />
       </div>
+      <hr />
 
-      {/* <div className="PhoneNumbers"> */}
+      {Showing && (
+        <div className="PhoneNumbers">
+          {/* name input field and ph input field and add button */}
+          <table>
+            <thead>
+              <tr>
+                <th>Phone Name</th>
+                <th>Phone Number</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {
+                phoneNumbers.map((phone)=>(
+                  <tr key={phone.id}>
+                    <td>{phone.name}</td>
+                    <td>{phone.number}</td>
+                    <td>
+                      <button onClick={()=>DeletePhoneNumber(phone.id)}>Delete</button>
+                    </td>
+                  </tr>
+                ))
+              }
+
+              <tr>
+                <td>
+                  <input
+                    type="text"
+                    placeholder=" Name "
+                    value={newPhoneName}
+                    onChange={(e) => setNewPhoneName(e.target.value)}
+                  />
+
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    placeholder=" Number "
+                    value={newPhoneNumber}
+                    onChange={(e) => setNewPhoneNumber(e.target.value)}
+                  />
+
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      //call addPhoneNumber function
+                      addPhoneNumber(newPhoneName, newPhoneNumber);
+                    }}
+                  >
+                    Add
+                  </button>
+                  
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+        </div>
+      )}
     </div>
   );
 }

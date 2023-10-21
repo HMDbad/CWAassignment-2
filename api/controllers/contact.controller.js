@@ -26,13 +26,14 @@ exports.findAll = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
+      res.status(501).send({
         message: err.message || "Some error occurred",
       });
     });
 };
 
 // Get one contact by id
+
 exports.findOne = (req, res) => {
   const id = req.params.contactId;
 
@@ -41,7 +42,7 @@ exports.findOne = (req, res) => {
       if (data) {
         res.send(data);
       } else {
-        res.status(404).send({ message: `Contact with id ${id}} not found` });
+        res.status(501).send({ message: `Contact with id ${id}} not found` });
       }
     })
     .catch((err) => {
@@ -63,7 +64,7 @@ exports.update = (req, res) => {
       if (result[0] === 1) {
         res.send({ message: "Contact was updated successfully" });
       } else {
-        res.status(404).send({ message: `Contact with id ${id} not found` });
+        res.status(502).send({ message: `Contact with id ${id} not found` });
       }
     })
     .catch((err) => {
@@ -85,7 +86,7 @@ exports.delete = (req, res) => {
       if (result === 1) {
         res.send({ message: "Contact was deleted successfully" });
       } else {
-        res.status(404).send({ message: `Contact with id ${id} not found` });
+        res.status(503).send({ message: `Contact with id ${id} not found` });
       }
     })
     .catch((err) => {
