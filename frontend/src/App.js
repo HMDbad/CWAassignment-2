@@ -2,55 +2,108 @@ import { useState, useEffect } from "react"; // import useEffect
 import "./App.css";
 
 function App() {
-  // create a state variable called contacts
-  //list of all contactc in the database
+  //contacts is a state variable that stores all contacts
   const [contacts, setContacts] = useState([]);
-  // value of the input field
+
+  // newContactName is a state variable that stores the name of a new contact
   const [newContactName, setNewContactName] = useState("");
 
-  // useEffect is a hook that runs after the first render and
-  //   fetchContacts is called to get all contacts from the database
+  // function which fetches data from the backend and returns it as json
+  const fetchData = async (url, options = {}) => {
+    const response = await fetch(url, options);
+    return await response.json();
+    // return data;
+  };
+
+  // useEffect is a hook that runs after the first render and after every update
+  // the emty array is the dependency array, which tells useEffect
+  // to only run once after the componenet is mounted
   useEffect(() => {
     fetchContacts();
   }, []);
 
-  const fetchData = async (url, option = {}) => {
-    const response = await fetch(url, option);
-    const data = await response.json();
-    return data;
-  };
-
+  // function which fetches all contacts from the database
   const fetchContacts = async () => {
+    console.log("fetching contacts from database");
     try {
-      const data = await fetchData("http://localhost:5003/api/contacts");
+      const data = await fetchData("http://localhost:80/api/contacts");
       setContacts(data);
     } catch (error) {
-      console.log("Error while fetching contacts", error);
+      console.log("Error while fetching contacts data: ", error);
     }
   };
 
+  // function which creates a new contact in the database
+  const createContact = async (name) => {
+    console.log("creating new contact");
+    try {
+      await fetchData("http://localhost:80/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+      fetchContacts();
+    } catch (error) {
+      console.log("Error while creating new contact: ", error);
+    }
+  };
+
+  // component JSX here
   return (
-    <div>
-      <h1>Contacts</h1>
-      {contacts.map((contact) => (
-        <div className="contact" key={contact.id}>
-          <h3>{contact.name}</h3>
-        </div>
-      ))}
-      <div id="outer-box">
+    <div className="Container">
+      <h1>CONTACTOR</h1>
+      <div className="Maincontainer">
         <h2>Contacts</h2>
-        <input
-          id="inputfield"
-          type="text"
-          placeholder="Please input a name"
-          value={newContactName}
-          onChange={(e) => setNewContactName(e.target.value)}
-        />
-        <button id="createContact" >Create Contact</button>
-        <p>Click a contact to view associated phone numbers</p>
+        <div className="ContactsInput">
+          <input
+            id="inputfield"
+            type="text"
+            placeholder=" Name "
+            value={newContactName}
+            onChange={(e) => setNewContactName(e.target.value)}
+          />
+          <button 
+            onClick={() => { createContact(newContactName); setNewContactName(""); }}>
+            Create Contact
+          </button>
+        </div>
+        <hr />
+        <div className="ContactsList">
+          {contacts.map((contact) => (
+            <ContactCard 
+              key={contact.id} 
+              contact={contact} 
+            />
+          ))}
+        </div>
+        
+        
       </div>
+
+      <p>Click a contact to view associated phone numbers</p>
+      
     </div>
   );
 }
+
+
+
+function ContactCard({ contact }) {
+  return (
+    <div className="Card">
+      <div className="Info">
+        <div className="name">
+          {contact.name}
+        </div>
+        </div>
+        
+    </div>
+  );
+}
+
+
+
 
 export default App;

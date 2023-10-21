@@ -2,6 +2,9 @@ version: "3.8"
 
 #Update the connection among these microservices before starting the container.
 # 
+networks:
+  architecture:
+    driver: bridge
 
 services:
   nginx:
@@ -10,6 +13,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:80
+    networks:
+      - architecture
+    depends_on:
+      - frontend
+      - api
       
   frontend:
     build: 
@@ -17,8 +25,10 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./frontend:/app
-    depends_on:
+    links:
       - api
+    networks:
+      - architecture
   
   api:
     build: 
@@ -29,6 +39,10 @@ services:
       - 5003:5003
     volumes:
       - ./api:/app
+    links:
+      - db 
+    networks:
+      - architecture
 
   db:
     image: postgres:15.3-alpine3.18
@@ -36,3 +50,5 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+    networks:
+      - architecture
