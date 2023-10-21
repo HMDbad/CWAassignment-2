@@ -66,3 +66,68 @@ body {
     background-color: rgb(14, 214, 101);
     cursor: pointer;
 }
+
+.Maincontainer hr {
+    width: 70%;
+    margin-bottom: 2%;
+}
+
+.ContactsList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    padding: 2%;
+}
+
+.Card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 2%;
+    margin-bottom: 2%;
+}
+
+.contact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2%;
+}
+
+.Delete button {
+    width: 150px;
+    height: 30px;
+    margin-bottom: 2%;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding-left: 2%;
+    cursor: pointer;
+    background-color: rgb(255, 0, 0);
+    margin-left: auto;
+}
+
+.name hr {
+    width: 100%;
+    margin-bottom: 2%;
+}
+
+.name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.Card .name h1,
+.Card .name p,
+.Card .name button,
+.Card hr {
+    margin: 10px; /* Adjust the value as per your preference */
+}
+

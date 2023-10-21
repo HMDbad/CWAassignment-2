@@ -10,9 +10,13 @@ function App() {
 
   // function which fetches data from the backend and returns it as json
   const fetchData = async (url, options = {}) => {
-    const response = await fetch(url, options);
-    return await response.json();
-    // return data;
+    try {
+      const response = await fetch(url, options);
+      return await response.json();
+    } catch (error) {
+      console.log("Error while fetching data: ", error);
+      throw error;
+    }
   };
 
   // useEffect is a hook that runs after the first render and after every update
@@ -50,6 +54,19 @@ function App() {
     }
   };
 
+  // delete contacts
+  const DeleteContact = async (contactId) => {
+    console.log("deleting contact");
+    try {
+      await fetchData(`http://localhost:80/api/contacts/${contactId}`,{
+        method: "DELETE",
+      });
+      fetchContacts();
+    } catch (error) {
+      console.log("Error while deleting contact: ", error);
+    }
+  };
+
   // component JSX here
   return (
     <div className="Container">
@@ -64,46 +81,56 @@ function App() {
             value={newContactName}
             onChange={(e) => setNewContactName(e.target.value)}
           />
-          <button 
-            onClick={() => { createContact(newContactName); setNewContactName(""); }}>
+          <button
+            onClick={() => {
+              createContact(newContactName);
+              setNewContactName("");
+            }}
+          >
             Create Contact
           </button>
         </div>
         <hr />
         <div className="ContactsList">
           {contacts.map((contact) => (
-            <ContactCard 
-              key={contact.id} 
-              contact={contact} 
-            />
+            <ContactCard key={contact.id} 
+            contact={contact} 
+            DeleteContact={DeleteContact}
+            fetchData={fetchData}/>
           ))}
         </div>
-        
-        
       </div>
 
       <p>Click a contact to view associated phone numbers</p>
-      
     </div>
   );
 }
 
-
-
-function ContactCard({ contact }) {
+// ContactCard component
+function ContactCard({ contact, DeleteContact, fetchData }) {
+  // const [phoneNumbers, setPhoneNumbers] = useState([]);
+  // const [newPhoneName, setNewPhoneName] = useState("");
+  // const [newPhoneNumber, setNewPhoneNumber] = useState("");
   return (
     <div className="Card">
       <div className="Info">
         <div className="name">
-          {contact.name}
+          <h1>{contact.name}</h1>
+          <p>   contactId : {contact.id} </p>
+          
+          <button onClick={() => DeleteContact(contact.id)}>Delete</button>
+
+          {/* name input field and ph input field and add button */}
+          {/* <input type="text" placeholder=" Name " />
+          <input type="text" placeholder=" Phone Number " />
+          <button>Add</button> */}
         </div>
-        </div>
-        
+        <hr />
+      </div>
+
+      {/* <div className="PhoneNumbers"> */}
     </div>
   );
 }
-
-
-
 
 export default App;

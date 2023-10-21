@@ -11,10 +11,11 @@ module.exports = (sequelize, Sequelize) => {
         },
 
         number: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: false
         },        
         
+        // foreign key
         contactId: {
             type: Sequelize.INTEGER,
             refrences: {
